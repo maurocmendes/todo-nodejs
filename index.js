@@ -1,9 +1,28 @@
+//Criando o modelo de tarefas
+let task = {
+    value: '',
+    checked: false
+}
 
+let tasks = [ task ]
+
+
+//Criando função para criar tarefa
+
+const createTask = async () => {
+    const task = await input({ message: "Type the name of your task:"})
+    if(task.length === 0){
+        console.log("Task name cannot be empty")
+        return
+    }
+
+    tasks.push({ value: task, checked: false })
+}
 
 
 // Criando função para iniciar a aplicação
 
-const { select } = require('@inquirer/prompts')
+const { select, input    } = require('@inquirer/prompts')
 
  const start = async () => {
      while (true) {
@@ -22,12 +41,17 @@ const { select } = require('@inquirer/prompts')
                  {
                      name:"Delete tasks",
                      value:"delete"
+                 },
+                 {
+                     name:"Exit",
+                     value:"exit"
                  }
              ]
          })
             switch (option) {
                 case "create":
-                    createTask()
+                    await createTask()
+                    console.log(tasks)
                     break
                 case "list":
                     listTasks()
@@ -35,7 +59,11 @@ const { select } = require('@inquirer/prompts')
                 case "delete":
                     deleteTask()
                     break
+                case "exit":
+                    console.log("See you next time!")
+                    return
             }
+
      }
 
  }
