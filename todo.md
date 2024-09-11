@@ -1,12 +1,14 @@
 - Iniciar git na pasta ✅
 - Commit inicial ✅
 - Subir o projeto para o GitHub ✅
-- Criar metas
-- Listar metas
-    - Metas realizadas
-    - Metas abertas
-- Marcar/Desmarcar metas realizadas
+- Função Criar metas ✅
+    - value, id incremental, checked ✅
+- Listar metas ✅
+    - Metas realizadas ✅
+    - Metas abertas ✅
+- Marcar/Desmarcar metas realizadas ✅
 - Remover metas
 - Editar metas
 - Sistema de Mensagem
+- Adicionar persistencia ao projeto
 - Criar Frontend
