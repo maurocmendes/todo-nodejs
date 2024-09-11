@@ -60,7 +60,21 @@ const completedTasks = async () => {
     })
 }
 
+//Criando função para listar tarefas pendentes
+const pendingTasks = async () => {
+    const pending = tasks.filter((task) => {
+        return task.checked !== true
+    })
+    if(pending.length === 0){
+        console.log("There is no pending tasks! =D " )
+        return
+    }
+    await select({
+        message: "Pending tasks : " + pending.length,
+        choices: [...pending]
 
+    })
+}
 
 //Criando função para apagar tarefas
 const deleteTasks = async  () =>{
@@ -87,6 +101,10 @@ const { select, input, checkbox} = require('@inquirer/prompts')
                      value:"completed"
                  },
                  {
+                     name:"Pending tasks",
+                     value:"pending"
+                 },
+                 {
                      name:"Delete tasks",
                      value:"delete"
                  },
@@ -107,6 +125,9 @@ const { select, input, checkbox} = require('@inquirer/prompts')
                     break
                 case "completed":
                     await completedTasks()
+                    break
+                case "pending":
+                    await pendingTasks()
                     break
                 case "delete":
                     await deleteTasks()
