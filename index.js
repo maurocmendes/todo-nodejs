@@ -55,7 +55,7 @@ const completedTasks = async () => {
         return
     }
     await select({
-        message: "Completed tasks ( ͡° ͜ʖ ͡°)_/¯ :\n",
+        message: "Completed tasks :" + completed.length,
         choices: [...completed]
     })
 }
