@@ -26,11 +26,13 @@ const listTasks = async () => {
             message: "Complete tasks marking with space, press enter to confirm and back",
             choices: [...tasks]
         })
-        if(answers === 0){
-            console.log("Select at least one task")
-        tasks.forEach((m) => {
+
+         tasks.forEach((m) => {
             m.checked = false
         })
+
+        if(answers === 0){
+            console.log("Select at least one task")
 
         }
         answers.forEach((answer) => {
@@ -43,14 +45,34 @@ const listTasks = async () => {
         console.log("The selected task are now marked as finished")
 }
 
-//
+//Criando função para listar tarefas concluídas
+const completedTasks = async () => {
+    const completed = tasks.filter((task) => {
+        return task.checked
+    })
+    if(completed.length === 0){
+       console.log("There is no completed tasks (◡︵◡)")
+        return
+    }
+    await select({
+        message: "Completed tasks ( ͡° ͜ʖ ͡°)_/¯ :\n",
+        choices: [...completed]
+    })
+}
+
+
+
+//Criando função para apagar tarefas
+const deleteTasks = async  () =>{
+    let task
+}
 
 // Criando função para iniciar a aplicação
 const { select, input, checkbox} = require('@inquirer/prompts')
  const start = async () => {
      while (true) {
          const option = await select({
-             message: 'To Do Application \n Menu >',
+             message: '\nTo Do Application \n Menu >',
              choices:[
                  {
                      name:"Create task",
@@ -59,6 +81,10 @@ const { select, input, checkbox} = require('@inquirer/prompts')
                  {
                      name:"List tasks",
                      value:"list"
+                 },
+                 {
+                     name:"Completed tasks",
+                     value:"completed"
                  },
                  {
                      name:"Delete tasks",
@@ -79,8 +105,11 @@ const { select, input, checkbox} = require('@inquirer/prompts')
                     await listTasks()
                     console.log(tasks)
                     break
+                case "completed":
+                    await completedTasks()
+                    break
                 case "delete":
-                    deleteTask()
+                    await deleteTasks()
                     break
                 case "exit":
                     console.log("See you next time!")
