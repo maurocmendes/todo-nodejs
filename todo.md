@@ -1,0 +1,12 @@
+- Iniciar git na pasta ✅
+- Commit inicial ✅
+- Subir o projeto para o GitHub ✅
+- Criar metas
+- Listar metas
+    - Metas realizadas
+    - Metas abertas
+- Marcar/Desmarcar metas realizadas
+- Remover metas
+- Editar metas
+- Sistema de Mensagem
+- Criar Frontend
