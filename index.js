@@ -1,11 +1,23 @@
-//Criando o modelo de tarefas
-let task = {
-    value: 'Test',
-    id: 0,
-    checked: false
+const { select, input, checkbox} = require('@inquirer/prompts')
+const fs = require("fs").promises
+
+let mensagem = "Welcome to your ToDo App";
+
+let tasks
+
+const loadTasks = async () => {
+    try {
+        const data = await fs.readFile("tasks.json", "utf-8")
+        tasks = JSON.parse(data)
+    }
+    catch (error) {
+        tasks = []
+    }
 }
 
-let tasks = [ task ]
+const saveTasks = async () => {
+    await fs.writeFile("tasks.json", JSON.stringify(tasks, null, 2))
+}
 
 
 //Criando função para criar tarefa
@@ -22,27 +34,30 @@ const createTask = async () => {
 
 //Criando função para listar tarefas/marcar e desmarcar
 const listTasks = async () => {
+        if (tasks.length === 0) {
+        mensagem = "No tasks to list!"
+        return
+        }
         const answers = await checkbox({
-            message: "Complete tasks marking with space, press enter to confirm and back",
-            choices: [...tasks]
+            message: "Complete tasks marking with space, press enter to confirm and return",
+            choices: [...tasks],
+            instructions: false,
         })
-
          tasks.forEach((m) => {
             m.checked = false
         })
-
-        if(answers === 0){
-            console.log("Select at least one task")
-
+        if(answers.length === 0){
+            mensagem= "Select at least one task"
+            return
         }
         answers.forEach((answer) => {
             const task = tasks.find((m) =>{
                 return m.value === answer
             })
+
             task.checked = true
         })
-
-        console.log("The selected task are now marked as finished")
+        mensagem = "The selected task are now marked as finished"
 }
 
 //Criando função para listar tarefas concluídas
@@ -51,7 +66,7 @@ const completedTasks = async () => {
         return task.checked
     })
     if(completed.length === 0){
-       console.log("There is no completed tasks (◡︵◡)")
+       mensagem = "There is no completed tasks (◡︵◡)"
         return
     }
     await select({
@@ -66,7 +81,7 @@ const pendingTasks = async () => {
         return task.checked !== true
     })
     if(pending.length === 0){
-        console.log("There is no pending tasks! =D " )
+        mensagem = "There is no pending tasks! =D "
         return
     }
     await select({
@@ -77,16 +92,52 @@ const pendingTasks = async () => {
 }
 
 //Criando função para apagar tarefas
-const deleteTasks = async  () =>{
-    let task
+const deleteTasks = async () => {
+    if(tasks.length === 0) {
+        mensagem = "No tasks available to delete!"
+        return
+    }
+    const tasksUnmarked = tasks.map((task) => {
+        return { value: task.value, id: task.id, checked: false }
+    })
+    const selectedToDelete = await checkbox({
+        message: "Select with 'space' tasks to delete, then press 'enter' to confirm",
+        choices: [...tasksUnmarked],
+        instructions: false,
+    })
+    if (selectedToDelete.length === 0){
+        mensagem = "There is no tasks to delete"
+        return
+    }
+    selectedToDelete.forEach((item) => {
+        tasks = tasks.filter((task) => {
+        return task.value !== item
+        })
+    })
+    mensagem = selectedToDelete.length + " task(s) deleted successfully "
 }
 
+const showMessage = () => {
+    console.clear();
+
+    if (mensagem !== "") {
+        console.log(mensagem)
+        console.log("")
+        mensagem = ""
+    }
+}
+
+
 // Criando função para iniciar a aplicação
-const { select, input, checkbox} = require('@inquirer/prompts')
- const start = async () => {
-     while (true) {
+const start = async () => {
+    await loadTasks()
+
+    while (true) {
+        showMessage()
+        await saveTasks()
+
          const option = await select({
-             message: '\nTo Do Application \n Menu >',
+             message: 'Menu >',
              choices:[
                  {
                      name:"Create task",
@@ -141,5 +192,5 @@ const { select, input, checkbox} = require('@inquirer/prompts')
 
  }
 
-start();
+start()
 
